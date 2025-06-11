@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.remindme.controller.MainController">
+   <center>
+      <VBox alignment="CENTER" spacing="30.0" styleClass="main-container">
+         <children>
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button fx:id="alarmButton" onAction="#toggleAlarm" styleClass="alarm-button" text="🔔" />
+                  <Button fx:id="dateButton" onAction="#openNewReminderWindow" styleClass="date-button" text="01/01/2025" />
+               </children>
+            </HBox>
+            <StackPane fx:id="clockContainer" styleClass="clock-container" />
+            <Button fx:id="nextEventButton" disable="true" onAction="#openAllEventsWindow" prefWidth="300.0" styleClass="next-event-button" text="No upcoming events" wrapText="true" />
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <Pane fx:id="mainPane" minHeight="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="confirmationLabel" alignment="CENTER" layoutX="100.0" layoutY="15.0" prefWidth="200.0" styleClass="confirmation-label" text="Confirmation Message" visible="false" />
+         </children>
+      </Pane>
+   </top>
+</BorderPane>

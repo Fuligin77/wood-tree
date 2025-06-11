@@ -1,0 +1,319 @@
+/* Root styling - Dark theme */
+.root {
+    -fx-background-color: #2b2b2b;
+    -fx-font-family: "Arial";
+}
+
+/* Main container styling */
+.main-container {
+    -fx-background-color: #2b2b2b;
+    -fx-padding: 30;
+    -fx-min-width: 400;
+    -fx-min-height: 500;
+}
+
+/* Alarm button styling */
+.alarm-button {
+    -fx-background-color: #404040;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-padding: 10 15 10 15;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-min-width: 50;
+    -fx-min-height: 50;
+}
+
+.alarm-button:hover {
+    -fx-background-color: #505050;
+}
+
+.alarm-button:pressed {
+    -fx-background-color: #353535;
+}
+
+.alarm-button.active {
+    -fx-background-color: #0078d4;
+}
+
+.alarm-button.active:hover {
+    -fx-background-color: #106ebe;
+}
+
+.alarm-button.inactive {
+    -fx-background-color: #666666;
+    -fx-text-fill: #999999;
+}
+
+/* Date button styling */
+.date-button {
+    -fx-background-color: #404040;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+}
+
+.date-button:hover {
+    -fx-background-color: #505050;
+}
+
+.date-button:pressed {
+    -fx-background-color: #353535;
+}
+
+/* Clock container styling */
+.clock-container {
+    -fx-padding: 10;
+}
+
+/* Analog clock styling */
+.hour-hand {
+    -fx-stroke: white;
+    -fx-stroke-width: 4;
+    -fx-stroke-line-cap: round;
+}
+
+.minute-hand {
+    -fx-stroke: white;
+    -fx-stroke-width: 3;
+    -fx-stroke-line-cap: round;
+}
+
+.second-hand {
+    -fx-stroke: #ff4444;
+    -fx-stroke-width: 1.5;
+    -fx-stroke-line-cap: round;
+}
+
+/* Next event button styling */
+.next-event-button {
+    -fx-background-color: #404040;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 15 20 15 20;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-wrap-text: true;
+}
+
+.next-event-button:hover {
+    -fx-background-color: #505050;
+}
+
+.next-event-button:pressed {
+    -fx-background-color: #353535;
+}
+
+.next-event-button:disabled {
+    -fx-background-color: #333333;
+    -fx-text-fill: #888888;
+    -fx-cursor: default;
+}
+
+/* Confirmation label styling */
+.confirmation-label {
+    -fx-text-fill: #888888;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+/* New Reminder Window styling */
+.new-reminder-container {
+    -fx-background-color: #2b2b2b;
+    -fx-min-width: 350;
+    -fx-min-height: 450;
+}
+
+/* Section titles */
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: white;
+}
+
+/* Text fields */
+.text-field {
+    -fx-background-color: #404040;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888888;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 8;
+}
+
+.text-field:focused {
+    -fx-background-color: #505050;
+    -fx-border-color: #666666;
+    -fx-border-width: 1;
+}
+
+/* Checkboxes */
+.check-box {
+    -fx-text-fill: white;
+}
+
+.check-box .box {
+    -fx-background-color: #404040;
+    -fx-border-color: #666666;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #0078d4;
+    -fx-border-color: #0078d4;
+}
+
+/* Radio buttons */
+.radio-button {
+    -fx-text-fill: white;
+}
+
+.radio-button .radio {
+    -fx-background-color: #404040;
+    -fx-border-color: #666666;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: #0078d4;
+    -fx-border-color: #0078d4;
+}
+
+.radio-button .dot {
+    -fx-background-color: white;
+}
+
+/* Buttons */
+.add-button {
+    -fx-background-color: #0078d4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 30 10 30;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: #106ebe;
+}
+
+.add-button:pressed {
+    -fx-background-color: #005a9e;
+}
+
+.cancel-button {
+    -fx-background-color: #666666;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 30 10 30;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #777777;
+}
+
+.cancel-button:pressed {
+    -fx-background-color: #555555;
+}
+
+/* Error label */
+.error-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 12px;
+}
+
+/* Separator */
+.separator .line {
+    -fx-border-color: #555555;
+}
+
+/* All Events Window styling */
+.all-events-container {
+    -fx-background-color: #2b2b2b;
+}
+
+.info-label {
+    -fx-text-fill: #888888;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+/* ListView styling */
+.events-list {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: #555555;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.events-list .viewport {
+    -fx-background-color: #2b2b2b;
+}
+
+.events-list .list-cell {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+    -fx-border-color: transparent transparent #444444 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.events-list .list-cell:selected {
+    -fx-background-color: #0078d4;
+    -fx-text-fill: white;
+}
+
+.events-list .list-cell:hover {
+    -fx-background-color: #404040;
+}
+
+.events-list .list-cell:selected:hover {
+    -fx-background-color: #106ebe;
+}
+
+/* Scrollbar styling */
+.scroll-bar {
+    -fx-background-color: #404040;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #666666;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #777777;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #333333;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-background-color: #666666;
+}

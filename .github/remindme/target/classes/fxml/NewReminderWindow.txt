@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.remindme.controller.NewReminderController" spacing="15.0" styleClass="new-reminder-container">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Label styleClass="section-title" text="Create New Reminder">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Label>
+      
+      <GridPane hgap="10.0" vgap="10.0">
+         <columnConstraints>
+            <ColumnConstraints minWidth="80.0" />
+            <ColumnConstraints minWidth="150.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+         <children>
+            <Label text="Day:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="dateField" promptText="dd/mm/yy" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            
+            <Label text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="timeField" promptText="hh:mm" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            
+            <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="descriptionField" promptText="Max 20 characters" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      
+      <Separator />
+      
+      <Label styleClass="section-title" text="Remind me at:">
+         <font>
+            <Font name="Arial Bold" size="14.0" />
+         </font>
+      </Label>
+      
+      <VBox spacing="10.0">
+         <children>
+            <CheckBox fx:id="sameTimeCheckBox" text="The same time" />
+            
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <RadioButton fx:id="minutesBeforeRadio" text="Minutes before:" />
+               <TextField fx:id="minutesField" prefWidth="60.0" promptText="0" />
+            </HBox>
+            
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <RadioButton fx:id="hoursBeforeRadio" text="Hours before:" />
+               <TextField fx:id="hoursField" prefWidth="60.0" promptText="0" />
+            </HBox>
+            
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <RadioButton fx:id="daysBeforeRadio" text="Days before:" />
+               <TextField fx:id="daysField" prefWidth="60.0" promptText="0" />
+            </HBox>
+         </children>
+      </VBox>
+      
+      <Label fx:id="errorLabel" styleClass="error-label" text="Error message" visible="false" />
+      
+      <HBox alignment="CENTER" spacing="20.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <children>
+            <Button fx:id="addButton" onAction="#handleAddReminder" styleClass="add-button" text="ADD" />
+            <Button onAction="#handleCancel" styleClass="cancel-button" text="CANCEL" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
