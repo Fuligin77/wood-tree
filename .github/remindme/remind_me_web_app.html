@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remind Me</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .clock-container {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .analog-clock {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            border-radius: 50%;
+            background: radial-gradient(circle, #2b2b2b 0%, #4a4a4a 100%);
+            border: 4px solid #888;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .clock-face {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 50%;
+        }
+
+        .hour-marker {
+            position: absolute;
+            width: 3px;
+            height: 15px;
+            background: white;
+            left: 50%;
+            top: 5px;
+            transform-origin: 50% 95px;
+            border-radius: 2px;
+        }
+
+        .minute-marker {
+            position: absolute;
+            width: 1px;
+            height: 8px;
+            background: #ccc;
+            left: 50%;
+            top: 8px;
+            transform-origin: 50% 92px;
+        }
+
+        .clock-number {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            transform: translate(-50%, -50%);
+        }
+
+        .hand {
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            transform-origin: 50% 100%;
+            border-radius: 10px;
+        }
+
+        .hour-hand {
+            width: 5px;
+            height: 45px;
+            background: white;
+            margin-left: -2.5px;
+        }
+
+        .minute-hand {
+            width: 3px;
+            height: 70px;
+            background: white;
+            margin-left: -1.5px;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 80px;
+            background: #ff4444;
+            margin-left: -1px;
+        }
+
+        .center-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            border: 2px solid white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #dee2e6;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .alarm-btn {
+            font-size: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alarm-active {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .alarm-inactive {
+            background: #6c757d;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .date-display {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            border: 2px solid #dee2e6;
+        }
+
+        .next-event {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            color: #1565c0;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .confirmation-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .confirmation-message.show {
+            transform: translateX(0);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .reminder-options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .reminder-options input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .reminder-options input[type="number"] {
+            width: 80px;
+        }
+
+        .events-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .event-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-item .event-info {
+            flex: 1;
+        }
+
+        .event-item .event-date {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .event-item .event-desc {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>Remind Me</h1>
+        
+        <div class="date-display" id="dateDisplay"></div>
+        
+        <div class="clock-container">
+            <div class="analog-clock">
+                <div class="clock-face" id="clockFace">
+                    <div class="hand hour-hand" id="hourHand"></div>
+                    <div class="hand minute-hand" id="minuteHand"></div>
+                    <div class="hand second-hand" id="secondHand"></div>
+                    <div class="center-dot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="openNewReminderModal()">📅 New Reminder</button>
+            <button class="btn btn-secondary" onclick="openAllEventsModal()">📋 All Events</button>
+            <button class="btn alarm-btn alarm-inactive" id="alarmBtn" onclick="toggleAlarm()">🔕</button>
+        </div>
+        
+        <div class="next-event" id="nextEvent">No upcoming events</div>
+    </div>
+
+    <!-- Confirmation Message -->
+    <div class="confirmation-message" id="confirmationMessage"></div>
+
+    <!-- New Reminder Modal -->
+    <div id="newReminderModal" class="modal">
+        <div class="modal-content">
+            <h2>New Reminder</h2>
+            <form id="reminderForm">
+                <div class="form-group">
+                    <label for="eventDate">Date (DD/MM/YYYY):</label>
+                    <input type="text" id="eventDate" placeholder="15/06/2025" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventTime">Time (HH:MM):</label>
+                    <input type="text" id="eventTime" placeholder="12:00" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventDescription">Description (max 20 chars):</label>
+                    <input type="text" id="eventDescription" maxlength="20" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Reminder Time:</label>
+                    <div class="reminder-options">
+                        <input type="radio" id="sameTime" name="reminderType" value="same" checked>
+                        <label for="sameTime">Same time</label>
+                    </div>
+                    <div class="reminder-options">
+                        <input type="radio" id="minutesBefore" name="reminderType" value="minutes">
+                        <input type="number" id="minutesValue" min="1" max="60" value="15" disabled>
+                        <label for="minutesBefore">minutes before</label>
+                    </div>
+                    <div class="reminder-options">
+                        <input type="radio" id="hoursBefore" name="reminderType" value="hours">
+                        <input type="number" id="hoursValue" min="1" max="24" value="1" disabled>
+                        <label for="hoursBefore">hours before</label>
+                    </div>
+                    <div class="reminder-options">
+                        <input type="radio" id="daysBefore" name="reminderType" value="days">
+                        <input type="number" id="daysValue" min="1" max="30" value="1" disabled>
+                        <label for="daysBefore">days before</label>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="errorMessage"></div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('newReminderModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Reminder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- All Events Modal -->
+    <div id="allEventsModal" class="modal">
+        <div class="modal-content">
+            <h2>All Events</h2>
+            <div class="events-list" id="eventsList"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeModal('allEventsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+        let alarmActive = localStorage.getItem('alarmActive') === 'true';
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeClock();
+            initializeAlarm();
+            updateDateDisplay();
+            updateNextEvent();
+            setupReminderForm();
+            
+            // Check for alarms every minute
+            setInterval(checkForAlarms, 60000);
+        });
+
+        // Clock functionality
+        function initializeClock() {
+            createClockMarkers();
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        function createClockMarkers() {
+            const clockFace = document.getElementById('clockFace');
+            
+            // Create hour markers
+            for (let i = 0; i < 12; i++) {
+                const marker = document.createElement('div');
+                marker.className = 'hour-marker';
+                marker.style.transform = `translateX(-50%) rotate(${i * 30}deg)`;
+                clockFace.appendChild(marker);
+            }
+            
+            // Create minute markers
+            for (let i = 0; i < 60; i++) {
+                if (i % 5 !== 0) {
+                    const marker = document.createElement('div');
+                    marker.className = 'minute-marker';
+                    marker.style.transform = `translateX(-50%) rotate(${i * 6}deg)`;
+                    clockFace.appendChild(marker);
+                }
+            }
+            
+            // Create numbers
+            for (let i = 1; i <= 12; i++) {
+                const number = document.createElement('div');
+                number.className = 'clock-number';
+                number.textContent = i;
+                
+                const angle = (i * 30 - 90) * Math.PI / 180;
+                const x = 100 + 65 * Math.cos(angle);
+                const y = 100 + 65 * Math.sin(angle);
+                
+                number.style.left = x + 'px';
+                number.style.top = y + 'px';
+                clockFace.appendChild(number);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours() % 12;
+            
+            const secondAngle = seconds * 6;
+            const minuteAngle = minutes * 6 + seconds * 0.1;
+            const hourAngle = hours * 30 + minutes * 0.5;
+            
+            document.getElementById('secondHand').style.transform = `rotate(${secondAngle}deg)`;
+            document.getElementById('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
+            document.getElementById('hourHand').style.transform = `rotate(${hourAngle}deg)`;
+        }
+
+        // Date display
+        function updateDateDisplay() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB');
+            document.getElementById('dateDisplay').textContent = dateStr;
+        }
+
+        // Alarm functionality
+        function initializeAlarm() {
+            updateAlarmButton();
+        }
+
+        function toggleAlarm() {
+            alarmActive = !alarmActive;
+            localStorage.setItem('alarmActive', alarmActive);
+            updateAlarmButton();
+            
+            const message = alarmActive ? 'Alarm activated 🔔' : 'Alarm deactivated 🔕';
+            showConfirmationMessage(message);
+        }
+
+        function updateAlarmButton() {
+            const btn = document.getElementById('alarmBtn');
+            if (alarmActive) {
+                btn.textContent = '🔔';
+                btn.className = 'btn alarm-btn alarm-active';
+            } else {
+                btn.textContent = '🔕';
+                btn.className = 'btn alarm-btn alarm-inactive';
+            }
+        }
+
+        function checkForAlarms() {
+            if (!alarmActive) return;
+            
+            const now = new Date();
+            const currentTime = now.getTime();
+            
+            reminders.forEach(reminder => {
+                const reminderTime = new Date(reminder.reminderDateTime).getTime();
+                const timeDiff = Math.abs(currentTime - reminderTime);
+                
+                // If within 1 minute of reminder time
+                if (timeDiff < 60000 && !reminder.alarmTriggered) {
+                    triggerAlarm(reminder);
+                    reminder.alarmTriggered = true;
+                    saveReminders();
+                }
+            });
+        }
+
+        function triggerAlarm(reminder) {
+            // Create alarm sound (beep)
+            playAlarmSound();
+            
+            // Show notification
+            showConfirmationMessage(`⚠️ Reminder: ${reminder.description}`, 5000);
+            
+            // Browser notification (if permitted)
+            if (Notification.permission === 'granted') {
+                new Notification('Remind Me', {
+                    body: `${reminder.description} - ${reminder.date} ${reminder.time}`,
+                    icon: '🔔'
+                });
+            }
+        }
+
+        function playAlarmSound() {
+            // Create audio context for alarm sound
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                }, i * 600);
+            }
+        }
+
+        // Reminder management
+        function addReminder(date, time, description, reminderType, reminderValue) {
+            const eventDateTime = new Date(`${date.split('/').reverse().join('-')}T${time}`);
+            let reminderDateTime = new Date(eventDateTime);
+            
+            switch (reminderType) {
+                case 'minutes':
+                    reminderDateTime.setMinutes(reminderDateTime.getMinutes() - reminderValue);
+                    break;
+                case 'hours':
+                    reminderDateTime.setHours(reminderDateTime.getHours() - reminderValue);
+                    break;
+                case 'days':
+                    reminderDateTime.setDate(reminderDateTime.getDate() - reminderValue);
+                    break;
+            }
+            
+            const reminder = {
+                id: Date.now(),
+                date,
+                time,
+                description,
+                reminderType,
+                reminderValue,
+                eventDateTime: eventDateTime.toISOString(),
+                reminderDateTime: reminderDateTime.toISOString(),
+                alarmTriggered: false
+            };
+            
+            reminders.push(reminder);
+            reminders.sort((a, b) => new Date(a.eventDateTime) - new Date(b.eventDateTime));
+            saveReminders();
+            updateNextEvent();
+            
+            return reminder;
+        }
+
+        function removeReminder(id) {
+            reminders = reminders.filter(r => r.id !== id);
+            saveReminders();
+            updateNextEvent();
+            updateEventsList();
+        }
+
+        function saveReminders() {
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+        }
+
+        function updateNextEvent() {
+            const now = new Date();
+            const nextReminder = reminders.find(r => new Date(r.eventDateTime) > now);
+            
+            const nextEventEl = document.getElementById('nextEvent');
+            if (nextReminder) {
+                nextEventEl.textContent = `Next Event: ${nextReminder.description} - ${nextReminder.date} ${nextReminder.time}`;
+                nextEventEl.style.display = 'block';
+            } else {
+                nextEventEl.textContent = 'No upcoming events';
+            }
+        }
+
+        // Modal functionality
+        function openNewReminderModal() {
+            document.getElementById('newReminderModal').style.display = 'block';
+            
+            // Set default values
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-GB');
+            const timeStr = '12:00';
+            
+            document.getElementById('eventDate').value = dateStr;
+            document.getElementById('eventTime').value = timeStr;
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('sameTime').checked = true;
+            
+            // Request notification permission
+            if (Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        function openAllEventsModal() {
+            document.getElementById('allEventsModal').style.display = 'block';
+            updateEventsList();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function updateEventsList() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '';
+            
+            if (reminders.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No reminders yet</p>';
+                return;
+            }
+            
+            reminders.forEach(reminder => {
+                const eventItem = document.createElement('div');
+                eventItem.className = 'event-item';
+                eventItem.innerHTML = `
+                    <div class="event-info">
+                        <div class="event-date">📅 ${reminder.date} | ⏰ ${reminder.time}</div>
+                        <div class="event-desc">📝 ${reminder.description}</div>
+                    </div>
+                    <button class="delete-btn" onclick="removeReminder(${reminder.id})">Delete</button>
+                `;
+                eventsList.appendChild(eventItem);
+            });
+        }
+
+        // Form functionality
+        function setupReminderForm() {
+            const form = document.getElementById('reminderForm');
+            const radioButtons = document.querySelectorAll('input[name="reminderType"]');
+            const numberInputs = document.querySelectorAll('#minutesValue, #hoursValue, #daysValue');
+            
+            // Handle radio button changes
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    numberInputs.forEach(input => input.disabled = true);
+                    
+                    if (this.value === 'minutes') {
+                        document.getElementById('minutesValue').disabled = false;
+                    } else if (this.value === 'hours') {
+                        document.getElementById('hoursValue').disabled = false;
+                    } else if (this.value === 'days') {
+                        document.getElementById('daysValue').disabled = false;
+                    }
+                });
+            });
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const date = document.getElementById('eventDate').value;
+                const time = document.getElementById('eventTime').value;
+                const description = document.getElementById('eventDescription').value;
+                const reminderType = document.querySelector('input[name="reminderType"]:checked').value;
+                
+                let reminderValue = 0;
+                if (reminderType === 'minutes') {
+                    reminderValue = parseInt(document.getElementById('minutesValue').value);
+                } else if (reminderType === 'hours') {
+                    reminderValue = parseInt(document.getElementById('hoursValue').value);
+                } else if (reminderType === 'days') {
+                    reminderValue = parseInt(document.getElementById('daysValue').value);
+                }
+                
+                try {
+                    // Validate date format
+                    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(date)) {
+                        throw new Error('Date must be in DD/MM/YYYY format');
+                    }
+                    
+                    // Validate time format
+                    if (!/^\d{2}:\d{2}$/.test(time)) {
+                        throw new Error('Time must be in HH:MM format');
+                    }
+                    
+                    // Validate future date
+                    const eventDate = new Date(`${date.split('/').reverse().join('-')}T${time}`);
+                    if (eventDate <= new Date()) {
+                        throw new Error('Event must be in the future');
+                    }
+                    
+                    addReminder(date, time, description, reminderType, reminderValue);
+                    closeModal('newReminderModal');
+                    showConfirmationMessage('Reminder added successfully!');
+                    
+                } catch (error) {
+                    showError(error.message);
+                }
+            });
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function showConfirmationMessage(message, duration = 3000) {
+            const confirmationEl = document.getElementById('confirmationMessage');
+            confirmationEl.textContent = message;
+            confirmationEl.classList.add('show');
+            
+            setTimeout(() => {
+                confirmationEl.classList.remove('show');
+            }, duration);
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
