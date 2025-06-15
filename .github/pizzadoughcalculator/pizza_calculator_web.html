@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Dough Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500, #ff4757);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 95%;
+            margin: 20px;
+        }
+
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: bounce 2.5s ease-out;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(-300px); }
+            50% { transform: translateY(-300px); }
+            65% { transform: translateY(0); }
+            75% { transform: translateY(-80px); }
+            85% { transform: translateY(0); }
+            92% { transform: translateY(-40px); }
+            96% { transform: translateY(0); }
+            98% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .field-input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .radio-option input[type="radio"] {
+            transform: scale(1.2);
+            accent-color: #ff6b6b;
+        }
+
+        .tips-section {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .tips-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #ff4757;
+        }
+
+        .tip {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b6b, transparent);
+            margin: 30px 0;
+        }
+
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .ingredient-label {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .ingredient-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ff4757;
+            text-align: right;
+        }
+
+        .actions-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            min-width: 200px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+
+        .confirmation {
+            font-size: 0.9rem;
+            color: #28a745;
+            font-weight: bold;
+            min-height: 20px;
+            text-align: center;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+        .results-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .main-content,
+            .results-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .splash-text {
+                font-size: 1.8rem;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-text">Let me calculate and you have the fun!</div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        <h1 class="title">🍕 Pizza Dough Calculator</h1>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <div class="field-group">
+                    <label class="field-label">Desired Amount of Pizzas:</label>
+                    <input type="number" id="pizzaAmount" class="field-input" placeholder="Enter number (1-100)" min="1" max="100">
+                    <div class="error" id="pizzaAmountError"></div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Desired Pizza Size:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="small" name="size" value="200">
+                            <label for="small">Small (200g dough ball)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="medium" name="size" value="250" checked>
+                            <label for="medium">Medium (250g dough ball)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="large" name="size" value="300">
+                            <label for="large">Large (300g dough ball)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Desired Water Content (%):</label>
+                    <input type="number" id="hydration" class="field-input" placeholder="Enter percentage (50-90)" min="50" max="90" value="60">
+                    <div class="error" id="hydrationError"></div>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <div class="tips-title">Tips for preparing the dough:</div>
+                <div class="tip">Let the dough rise in closed container until double in size. Then divide the dough into portions and form dough balls.</div>
+                <div class="tip">Afterwards, let it ferment for 16 - 48 Hours in the fridge. Take out of the fridge 30 mins before forming the Pizza.</div>
+                <div class="tip">It might take a few tries to get it perfect, but you will get the hang of it!</div>
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="results-section">
+            <div>
+                <div class="results-title">Calculated Ingredients:</div>
+                <div class="results-grid">
+                    <div class="ingredient-label">Flour:</div>
+                    <div class="ingredient-value" id="flourResult">- g</div>
+                    
+                    <div class="ingredient-label">Water:</div>
+                    <div class="ingredient-value" id="waterResult">- ml</div>
+                    
+                    <div class="ingredient-label">Salt:</div>
+                    <div class="ingredient-value" id="saltResult">- g</div>
+                    
+                    <div class="ingredient-label">Fresh Yeast:</div>
+                    <div class="ingredient-value" id="freshYeastResult">- g</div>
+                    
+                    <div class="ingredient-label">Dry Yeast:</div>
+                    <div class="ingredient-value" id="dryYeastResult">- g</div>
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <button class="action-button" onclick="copyRecipe()">📋 Copy recipe to clipboard</button>
+                <div class="confirmation" id="copyConfirmation"></div>
+                
+                <button class="action-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
+                <div class="confirmation" id="whatsappConfirmation"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const BASE_FLOUR = 1000.0;
+        const BASE_WATER = 600.0;
+        const BASE_SALT = 30.0;
+        const BASE_FRESH_YEAST = 2.0;
+        const BASE_DRY_YEAST = 0.6;
+
+        // Elements
+        const pizzaAmountInput = document.getElementById('pizzaAmount');
+        const hydrationInput = document.getElementById('hydration');
+        const sizeRadios = document.querySelectorAll('input[name="size"]');
+        
+        // Error elements
+        const pizzaAmountError = document.getElementById('pizzaAmountError');
+        const hydrationError = document.getElementById('hydrationError');
+        
+        // Result elements
+        const flourResult = document.getElementById('flourResult');
+        const waterResult = document.getElementById('waterResult');
+        const saltResult = document.getElementById('saltResult');
+        const freshYeastResult = document.getElementById('freshYeastResult');
+        const dryYeastResult = document.getElementById('dryYeastResult');
+        
+        // Confirmation elements
+        const copyConfirmation = document.getElementById('copyConfirmation');
+        const whatsappConfirmation = document.getElementById('whatsappConfirmation');
+
+        // Initialize splash screen
+        setTimeout(() => {
+            document.getElementById('splashScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+            }, 500);
+        }, 3000);
+
+        // Add event listeners
+        pizzaAmountInput.addEventListener('input', () => {
+            validatePizzaAmount();
+            calculateIngredients();
+        });
+
+        hydrationInput.addEventListener('input', () => {
+            validateHydration();
+            calculateIngredients();
+        });
+
+        sizeRadios.forEach(radio => {
+            radio.addEventListener('change', calculateIngredients);
+        });
+
+        function validatePizzaAmount() {
+            const value = parseInt(pizzaAmountInput.value);
+            pizzaAmountError.textContent = '';
+            
+            if (pizzaAmountInput.value === '') return;
+            
+            if (isNaN(value) || value < 1) {
+                pizzaAmountError.textContent = 'So no Pizza today? :(';
+                pizzaAmountError.style.color = 'lightgray';
+            } else if (value > 100) {
+                pizzaAmountError.textContent = "That's too many Pizzas! Get help!";
+                pizzaAmountError.style.color = 'lightgray';
+            }
+        }
+
+        function validateHydration() {
+            const value = parseFloat(hydrationInput.value);
+            hydrationError.textContent = '';
+            
+            if (hydrationInput.value === '') return;
+            
+            if (isNaN(value)) {
+                hydrationError.textContent = 'Please enter a valid number';
+            } else if (value < 50 || value > 90) {
+                hydrationError.textContent = 'Please enter a value between 50% and 90%';
+            }
+        }
+
+        function calculateIngredients() {
+            const pizzaAmount = parseInt(pizzaAmountInput.value);
+            const hydration = parseFloat(hydrationInput.value);
+            const selectedSize = document.querySelector('input[name="size"]:checked');
+            
+            if (!pizzaAmount || !hydration || !selectedSize || 
+                pizzaAmount < 1 || pizzaAmount > 100 || 
+                hydration < 50 || hydration > 90) {
+                clearResults();
+                return;
+            }
+            
+            const doughBallWeight = parseInt(selectedSize.value);
+            const totalDoughWeight = pizzaAmount * doughBallWeight;
+            
+            const waterPercentage = hydration / 100.0;
+            const saltPercentage = BASE_SALT / BASE_FLOUR;
+            const freshYeastPercentage = BASE_FRESH_YEAST / BASE_FLOUR;
+            const dryYeastPercentage = BASE_DRY_YEAST / BASE_FLOUR;
+            
+            const flourAmount = totalDoughWeight / (1 + waterPercentage + saltPercentage + freshYeastPercentage);
+            const waterAmount = flourAmount * waterPercentage;
+            const saltAmount = flourAmount * saltPercentage;
+            const freshYeastAmount = flourAmount * freshYeastPercentage;
+            const dryYeastAmount = flourAmount * dryYeastPercentage;
+            
+            flourResult.textContent = `${flourAmount.toFixed(1)} g`;
+            waterResult.textContent = `${waterAmount.toFixed(1)} ml`;
+            saltResult.textContent = `${saltAmount.toFixed(1)} g`;
+            freshYeastResult.textContent = `${freshYeastAmount.toFixed(1)} g`;
+            dryYeastResult.textContent = `${dryYeastAmount.toFixed(1)} g`;
+        }
+
+        function clearResults() {
+            flourResult.textContent = '- g';
+            waterResult.textContent = '- ml';
+            saltResult.textContent = '- g';
+            freshYeastResult.textContent = '- g';
+            dryYeastResult.textContent = '- g';
+        }
+
+        function copyRecipe() {
+            if (flourResult.textContent === '- g') return;
+            
+            const pizzaAmount = pizzaAmountInput.value;
+            const hydration = hydrationInput.value;
+            const selectedSize = document.querySelector('input[name="size"]:checked');
+            const sizeText = selectedSize.labels[0].textContent.split(' ')[0].toLowerCase();
+            
+            const recipeText = `Pizza Dough Recipe
+==================
+
+Recipe for: ${pizzaAmount} ${sizeText} pizzas
+Hydration: ${hydration}%
+
+Ingredients:
+- Flour: ${flourResult.textContent}
+- Water: ${waterResult.textContent}
+- Salt: ${saltResult.textContent}
+- Fresh Yeast: ${freshYeastResult.textContent}
+- Dry Yeast: ${dryYeastResult.textContent}
+
+Tips for preparing the dough:
+============================
+Let the dough rise in closed container until double in size. Then divide the dough into portions and form dough balls.
+
+Afterwards, let it ferment for 16 - 48 Hours in the fridge. Take out of the fridge 30 mins before forming the Pizza.
+
+It might take a few tries to get it perfect, but you will get the hang of it!`;
+
+            navigator.clipboard.writeText(recipeText).then(() => {
+                showConfirmation(copyConfirmation, 'Copied to clipboard');
+            }).catch(() => {
+                showConfirmation(copyConfirmation, 'Copy failed - please try again');
+            });
+        }
+
+        function shareOnWhatsApp() {
+            if (flourResult.textContent === '- g') return;
+            
+            const pizzaAmount = pizzaAmountInput.value;
+            const hydration = hydrationInput.value;
+            const selectedSize = document.querySelector('input[name="size"]:checked');
+            const sizeText = selectedSize.labels[0].textContent.split(' ')[0].toLowerCase();
+            
+            const messageText = `Tasty Pizza Dough Recipe
+
+Recipe for: ${pizzaAmount} ${sizeText} pizzas
+Hydration: ${hydration}%
+
+Ingredients:
+• Flour: ${flourResult.textContent}
+• Water: ${waterResult.textContent}
+• Salt: ${saltResult.textContent}
+• Fresh Yeast: ${freshYeastResult.textContent}
+• Dry Yeast: ${dryYeastResult.textContent}
+
+Happy baking! 🍕`;
+
+            const encodedMessage = encodeURIComponent(messageText);
+            const whatsappUrl = `https://web.whatsapp.com/send?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            showConfirmation(whatsappConfirmation, 'Opening WhatsApp...');
+        }
+
+        function showConfirmation(element, message) {
+            element.textContent = message;
+            setTimeout(() => {
+                element.textContent = '';
+            }, 5000);
+        }
+
+        // Initial calculation
+        calculateIngredients();
+    </script>
+</body>
+</html>
