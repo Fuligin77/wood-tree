@@ -376,7 +376,7 @@
         const copyConfirmation = document.getElementById('copyConfirmation');
         const whatsappConfirmation = document.getElementById('whatsappConfirmation');
 
-        // Initialize splash screen
+        // Initialize splash 
         setTimeout(() => {
             document.getElementById('splashScreen').style.opacity = '0';
             setTimeout(() => {
@@ -385,7 +385,7 @@
             }, 500);
         }, 3000);
 
-        // Add event listeners
+        // Add event listners
         pizzaAmountInput.addEventListener('input', () => {
             validatePizzaAmount();
             calculateIngredients();
@@ -498,6 +498,8 @@ Afterwards, let it ferment for 16 - 48 Hours in the fridge. Take out of the frid
 
 It might take a few tries to get it perfect, but you will get the hang of it!`;
 
+            // Confirmation of successful copy to clipboard
+            
             navigator.clipboard.writeText(recipeText).then(() => {
                 showConfirmation(copyConfirmation, 'Copied to clipboard');
             }).catch(() => {
@@ -505,6 +507,8 @@ It might take a few tries to get it perfect, but you will get the hang of it!`;
             });
         }
 
+        // WhatsApp Share function and text
+        
         function shareOnWhatsApp() {
             if (flourResult.textContent === '- g') return;
             
